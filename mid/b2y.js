@@ -1,4 +1,4 @@
-// https://api.blinktrade.com/api/v1/BRL/orderbook
+// https://www.b2ybtc.com.br/api.html
 
 var q = require('q');
 var moment = require('moment');
@@ -6,17 +6,23 @@ var keys = require('../keys');
 var twoFactor = require('node-2fa');
 var WebSocket = require('ws');
 var waitUntil = require('wait-until');
+var request = require('request');
 
-let ENDPOINT_TRADE_API = 'wss://apifoxbitprodlb.alphapoint.com/WSGateway/';
+let ENDPOINT_TRADE_API = 'wss://bitcointoyou.alphapoint.com/WSGateway/';
 let ws = new WebSocket(ENDPOINT_TRADE_API);
 
 let listeners = {};
 let SessionToken = '';
 
-let instrumentDictTo = ['none', 'BTCBRL'];
+let instrumentDictTo = ['none', 'BTCBRL', 'ETHBRL'];
 let instrumentDictFrom = {
-    BTCBRL: 1   
+    BTCBRL: 1,
+    ETHBRL: 2
 };
+let pairDict = {
+    BTCBRL: 'BTC',
+    ETHBRL: 'ETH'
+}
 
 
 module.exports = {
@@ -50,7 +56,7 @@ module.exports = {
             module.exports.getBalance().then( res => {
                 callback(res);
             }).catch( err => {
-                console.error('ERROR MBTC '+ error);
+                console.error('ERROR'+ error);
             })
         },10000);
     },
@@ -77,17 +83,17 @@ module.exports = {
         return new Promise ( (resolve,reject) => {
 
             privateRequest('CancelAllOrders',{
-                OMSId: keys.fxb.OMSId,                      // Got using GetUserInfo
-                AccountID: keys.fxb.accountID,              // Gor using GetUserInfo
+                OMSId: keys.b2y.OMSId,                      // Got using GetUserInfo
+                AccountID: keys.b2y.accountID,              // Gor using GetUserInfo
                 InstrumentId: instrumentDictFrom[pair]      
             }, (res) => {
 
                 try{
                     res = JSON.parse(res);
                     if (res.result){
-                        console.log('FXB ORDERS CLEARED!')
-                        resolve('FXB ORDERS CLEARED');
-                    } else reject('ERROR clearing FXB orders!');
+                        console.log('B2Y ORDERS CLEARED!')
+                        resolve('B2Y ORDERS CLEARED');
+                    } else reject('ERROR clearing B2Y orders!');
                 } catch (err){
                     reject(err);
                 }
@@ -99,7 +105,7 @@ module.exports = {
     getAccountInfo : function (){
         return new Promise ( (resolve,reject) => {
             privateRequest('GetUserInfo',{
-                OMSId: keys.fxb.OMSId,              // Got using GetUserInfo
+                OMSId: keys.b2y.OMSId,              // Got using GetUserInfo
             }, (res)=>{
 
                 console.log(res);
@@ -111,7 +117,7 @@ module.exports = {
 
         return new Promise ( (resolve,reject) => {
             privateRequest('SubscribeLevel2',{
-                OMSId: keys.fxb.OMSId,              // Got using GetUserInfo
+                OMSId: keys.b2y.OMSId,              // Got using GetUserInfo
                 InstrumentId: instrumentDictFrom[pair],
                 Depth: 100
             }, (res)=>{
@@ -129,7 +135,7 @@ module.exports = {
                 resolve(orderbook);
             });
             privateRequest('UnsubscribeLevel2',{
-                OMSId: keys.fxb.OMSId,              // Got using GetUserInfo
+                OMSId: keys.b2y.OMSId,              // Got using GetUserInfo
                 InstrumentId: instrumentDictFrom[pair],
                 Depth: 100
             }, undefined);
@@ -141,12 +147,12 @@ module.exports = {
         return new Promise ( (resolve,reject) => {
         
             privateRequest('GetAccountPositions',{
-                OMSId: keys.fxb.OMSId,              // Got using GetUserInfo
-                AccountID: keys.fxb.accountID       // Gor using GetUserInfo
+                OMSId: keys.b2y.OMSId,              // Got using GetUserInfo
+                AccountID: keys.b2y.accountID       // Gor using GetUserInfo
             }, (res)=>{
 
                 res = JSON.parse(res);
-
+                // console.log(res)
                 let balance = {}
                 res.forEach( curr => {
                     balance[curr.ProductSymbol] = curr.Amount;
@@ -163,8 +169,8 @@ module.exports = {
         return new Promise ( (resolve,reject) => {
 
             privateRequest('GetOpenOrders',{
-                OMSId: keys.fxb.OMSId,              // Got using GetUserInfo
-                AccountID: keys.fxb.accountID       // Gor using GetUserInfo
+                OMSId: keys.b2y.OMSId,              // Got using GetUserInfo
+                AccountID: keys.b2y.accountID       // Gor using GetUserInfo
             }, (res) => {
                 console.log(res);
 
@@ -198,8 +204,8 @@ module.exports = {
         
         return new Promise ( (resolve,reject) => {
             privateRequest('GetAccountTrades',{
-                OMSId: keys.fxb.OMSId,              // Got using GetUserInfo
-                AccountID: keys.fxb.accountID       // Gor using GetUserInfo
+                OMSId: keys.b2y.OMSId,              // Got using GetUserInfo
+                AccountID: keys.b2y.accountID       // Gor using GetUserInfo
             }, (res) => {
                 // console.log(res);
                 try{
@@ -232,8 +238,8 @@ module.exports = {
 
         return new Promise ( (resolve,reject) => {
             privateRequest('SendOrder',{
-                OMSId: keys.fxb.OMSId,              // Got using GetUserInfo
-                AccountID: keys.fxb.accountID,      // Gor using GetUserInfo
+                OMSId: keys.b2y.OMSId,              // Got using GetUserInfo
+                AccountID: keys.b2y.accountID,      // Gor using GetUserInfo
                 ClientOrderId: 0,
                 Quantity: volume,
                 DisplayQuantity: 0,
@@ -254,8 +260,8 @@ module.exports = {
                     res = JSON.parse(res)
                     
                     if (res.status == 'Accepted'){
-			console.log('ORDER CREATED FXB: '+ res.OrderId); 
-			resolve('FXB Order created => ' + res.OrderId);
+			console.log('ORDER CREATED FLOW: '+ res.OrderId); 
+			resolve('FLOW Order created => ' + res.OrderId);
                     } else reject(res.errormsg)
                 } catch (err){
                     reject ('Error placing order: '+ err)
@@ -269,15 +275,15 @@ module.exports = {
 
         return new Promise ( (resolve,reject) => {
             privateRequest('cancelOrder',{
-                OMSId: keys.fxb.OMSId,              // Got using GetUserInfo
-                AccountID: keys.fxb.accountID,      // Gor using GetUserInfo
+                OMSId: keys.b2y.OMSId,              // Got using GetUserInfo
+                AccountID: keys.b2y.accountID,      // Gor using GetUserInfo
                 OrderId: id
             }, (res) => {
                 
                 try{
                     res = JSON.parse(res)
                     
-                    if (res.result) resolve('FXB Order cancelled => ' + id)
+                    if (res.result) resolve('FLOW Order cancelled => ' + id)
                     else reject(res.errormsg)
                 } catch (err){
                     reject ('Error Cancelling order: '+ err)
@@ -290,7 +296,7 @@ module.exports = {
 }
 
 function setListener(request, callback){
-    //console.log('SET LISTENER => '+ request);
+    // console.log('SET LISTENER => '+ request);
     listeners[request] = callback;
 }
 
@@ -312,7 +318,6 @@ function privateRequest(method, params, callback) {
         o: JSON.stringify(params)
     };
 
-    //console.log(params);
     setListener(method, callback);
 
     ws.send(JSON.stringify(frame));
@@ -325,14 +330,14 @@ ws.on('open', function open() {
 
     console.log('logging...'); 
     let params = {
-        "UserName": keys.fxb.username,
-        "Password": keys.fxb.password
+        "UserName": keys.b2y.username,
+        "Password": keys.b2y.password
     }
 
     privateRequest('WebAuthenticateUser',params, (res) =>{
         console.log(res);
         let params = {
-            "Code": twoFactor.generateToken(keys.fxb.secret).token
+            "Code": twoFactor.generateToken(keys.b2y.secret).token
         }
         privateRequest('Authenticate2FA',params, (res) =>{
             res = JSON.parse(res);
@@ -342,4 +347,8 @@ ws.on('open', function open() {
         console.log(params);
     })
 
+});
+
+ws.on('error', function (err) {
+    console.log(err);
 });
