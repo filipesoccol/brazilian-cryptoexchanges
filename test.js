@@ -1,17 +1,17 @@
-var moment = require('moment');
+var moment = require('moment')
 
 // var q = require('q');
-var mbtc = require('./mid/mbtc');
-var btd = require('./mid/btd');
-var bzx = require('./mid/bzx');
-//var fbtc = require('./mid/fbtc');
+var mbtc = require('./mid/mbtc')
+var btd = require('./mid/btd')
+var bzx = require('./mid/bzx')
+// var fbtc = require('./mid/fbtc');
 
-var fxb = require('./mid/fxb');
+var fxb = require('./mid/fxb')
 fxb.waitTillLogged()
-.then(fxb.getBalance.bind(undefined,'BTCBRL')).then( (res) => {
-
-    console.log(JSON.stringify(res,undefined,2));
-    return  new Promise((resolve, reject) => { resolve() })
+  // .then(fxb.getBalance.bind(undefined, 'BTCBRL')).then((res) => {
+  // .then(fxb.getUserInfo.bind(undefined, 'BTCBRL')).then((res) => {
+// console.log(JSON.stringify(res, undefined, 2))
+//     return  new Promise((resolve, reject) => { resolve() })
 // }).then(fxb.getTrades.bind(undefined, 'BTCBRL')).then( res =>{
 //     console.log(JSON.stringify(res,undefined,2));
 //     return  new Promise((resolve, reject) => { resolve() })
@@ -23,14 +23,12 @@ fxb.waitTillLogged()
 //     return  new Promise((resolve, reject) => { resolve() })
 // }).then(fxb.clearOrders.bind(undefined, 'BTCBRL')).then( res =>{
 //     console.log(JSON.stringify(res,undefined,2));
-}).catch( err => {
-    console.log(err);
-})
-// .then(fxb.getOrderbook.bind(undefined,'BTCBRL')).then( (res) => {
-
-//     console.log(JSON.stringify(res,undefined,2));
-
-// })
+  // }).catch(err => {
+  //   console.error(err)
+  // })
+  .then(fxb.getOrderbook.bind(undefined, 'BTCBRL')).then((res) => {
+    console.log(JSON.stringify(res, undefined, 2))
+  })
 // b2y.getOrderbook().then( (orderbook) => {
 //     console.log('ORDERBOOK BUY = '+ orderbook.buy.length);
 //     console.log('ORDERBOOK SELL = '+ orderbook.sell.length);
@@ -58,7 +56,7 @@ fxb.waitTillLogged()
 //     b2y.getOpenOrders().then(function(orders){
 //         console.log("ORDERS = " + JSON.stringify(orders));
 //         orders.buy.forEach(order => {
-//             // CANCELLING BUY ORDERS 
+//             // CANCELLING BUY ORDERS
 //             b2y.cancelOrder('BTCBRL', order.id).then( (canceled) => {
 //                 console.log('CANCELED ORDER B2Y = ' + canceled);
 //             }).catch( (err) => {
@@ -66,7 +64,7 @@ fxb.waitTillLogged()
 //             });
 //         });
 //         orders.sell.forEach(order => {
-//             // CANCELLING SELL ORDERS 
+//             // CANCELLING SELL ORDERS
 //             b2y.cancelOrder('BTCBRL', order.id).then( (canceled) => {
 //                 console.log('CANCELED ORDER B2Y = ' + canceled);
 //             }).catch( (err) => {
@@ -98,11 +96,11 @@ fxb.waitTillLogged()
 
 //     // console.log('ORDER CREATED: '+ order);
 
-//     // GETTING OPEN ORDERS 
+//     // GETTING OPEN ORDERS
 //     mbtc.getOpenOrders('BTCBRL', undefined).then( (orders) => {
 //         console.log('ORDERS MBTC = ' + JSON.stringify(orders, undefined, 2));
 //         orders.buy.forEach(order => {
-//             // CANCELLING BUY ORDERS 
+//             // CANCELLING BUY ORDERS
 //             mbtc.cancelOrder('BTCBRL', order.id).then( (canceled) => {
 //                 console.log('CANCELED ORDER MBTC = ' + canceled);
 //             }).catch( (err) => {
@@ -110,7 +108,7 @@ fxb.waitTillLogged()
 //             });
 //         });
 //         orders.sell.forEach(order => {
-//             // CANCELLING SELL ORDERS 
+//             // CANCELLING SELL ORDERS
 //             mbtc.cancelOrder('BTCBRL', order.id).then( (canceled) => {
 //                 console.log('CANCELED ORDER MBTC = ' + canceled);
 //             }).catch( (err) => {
@@ -130,6 +128,9 @@ fxb.waitTillLogged()
 
 // btd.getOrderbook().then( (orderbook) => {
 //     console.log('ORDERBOOK BUY = '+ orderbook.buy.length);
+//     orderbook.buy.forEach( order => {
+//         console.log(order)
+//     })
 //     console.log('ORDERBOOK SELL = '+ orderbook.sell.length);
 // }).catch( (err) => {
 //     console.error('ERROR GETTING ORDERBOOK FROM MBTC ' + err);
@@ -141,7 +142,7 @@ fxb.waitTillLogged()
 //     btd.getOpenOrders('BTCBRL', new Date()).then( (res) => {
 //         console.log(JSON.stringify(res,undefined,2));
 //         orders.sell.forEach(order => {
-//             // CANCELLING SELL ORDERS 
+//             // CANCELLING SELL ORDERS
 //             btd.cancelOrder('BTCBRL', order.id).then( (canceled) => {
 //                 console.log('CANCELED ORDER BTD = ' + JSON.stringify(canceled));
 //             }).catch( (err) => {
@@ -173,7 +174,7 @@ fxb.waitTillLogged()
 //     bzx.getBalance()
 //     .then( res => console.log(JSON.stringify(res)))
 //     .catch( (err) => console.log(err));
-    
+
 //     bzx.clearOrders("BTCBRL").then( (res) => {
 //         console.log(JSON.stringify(res));
 //     });
@@ -195,24 +196,23 @@ fxb.waitTillLogged()
 //     b2y.clearOrders('BTCBRL');
 // });
 
-
 // fbtc.getBalance().then( (res) => {
 //     console.log('BALANCE B2Y: '+ JSON.stringify(res));
 // });
 // b2y.getBalance().then( (res) => {
 //     console.log('BALANCE B2Y: '+ JSON.stringify(res));
 // });
-mbtc.getBalance().then( (res) => {
-    console.log('BALANCE MBTC: '+ JSON.stringify(res));
-});
-btd.getBalance().then( (res) => {
-    console.log('BALANCE BTD: '+ JSON.stringify(res));
-}).catch( (err) => {
-    console.log('ERR = '+ JSON.stringify(err));
-});
-bzx.getBalance().then( (res) => {
-    console.log('BALANCE BZX: '+ JSON.stringify(res));
-});
+// mbtc.getBalance().then( (res) => {
+//     console.log('BALANCE MBTC: '+ JSON.stringify(res));
+// });
+// btd.getBalance().then( (res) => {
+//     console.log('BALANCE BTD: '+ JSON.stringify(res));
+// }).catch( (err) => {
+//     console.log('ERR = '+ JSON.stringify(err));
+// });
+// bzx.getBalance().then( (res) => {
+//     console.log('BALANCE BZX: '+ JSON.stringify(res));
+// });
 // console.log(moment().toISOString());
 // bzx.getOrderbook('BTCBRL').then( (res) => {
 //     console.log('BALANCE BZX: '+ JSON.stringify(res));
@@ -220,8 +220,6 @@ bzx.getBalance().then( (res) => {
 // bzx.getOpenOrders('BTCBRL').then( (res) => {
 //     console.log('BALANCE BZX: '+ JSON.stringify(res));
 // });
-
-
 
 // q.all([ b2y.getTrades('BTCBRL'),
 //         b2y.getTrades('BTCBRL'),

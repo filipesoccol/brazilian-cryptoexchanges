@@ -1,0 +1,37 @@
+{
+  "name": "brazilian-cryptoexchanges",
+  "version": "1.0.0",
+  "description": "Brazilian Exchange",
+  "main": "test.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/marc-queiroz/brazilian-cryptoexchanges.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/marc-queiroz/brazilian-cryptoexchanges/issues"
+  },
+  "homepage": "https://github.com/marc-queiroz/brazilian-cryptoexchanges#readme",
+  "dependencies": {
+    "moment": "^2.23.0",
+    "node-2fa": "^1.1.2",
+    "nonce": "^1.0.4",
+    "q": "^1.5.1",
+    "request": "^2.88.0",
+    "unirest": "^0.5.1",
+    "wait-until": "0.0.2",
+    "ws": "^6.1.2"
+  },
+  "devDependencies": {
+    "eslint": "^5.10.0",
+    "eslint-config-standard": "^12.0.0",
+    "eslint-plugin-import": "^2.14.0",
+    "eslint-plugin-node": "^8.0.0",
+    "eslint-plugin-promise": "^4.0.1",
+    "eslint-plugin-standard": "^4.0.0"
+  }
+}
