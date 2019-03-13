@@ -49,7 +49,7 @@ typings/
 .eslintcache
 
 # Optional .eslint
-.eslint
+.eslintrc.js
 
 # Optional REPL history
 .node_repl_history

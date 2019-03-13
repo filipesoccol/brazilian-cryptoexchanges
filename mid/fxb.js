@@ -19,6 +19,10 @@ let instrumentDictFrom = {
 }
 
 module.exports = {
+  ENDPOINT_TRADE_API: ENDPOINT_TRADE_API,
+  ws: ws,
+  listeners: listeners,
+  SessionToken: SessionToken,
 
   waitTillLogged: function () {
     return new Promise((resolve, reject) => {
@@ -308,25 +312,27 @@ function privateRequest (method, params, callback) {
   ws.send(JSON.stringify(frame))
 }
 
-ws.on('message', triggerListener)
+function initWS () {
+  ws.on('message', triggerListener)
 
-ws.on('open', function open () {
-  console.log('logging...')
-  let params = {
-    'UserName': keys.fxb.username,
-    'Password': keys.fxb.password
-  }
-
-  privateRequest('WebAuthenticateUser', params, (res) => {
-    console.log(res)
+  ws.on('open', function open () {
+    console.log('logging...')
     let params = {
-      'Code': twoFactor.generateToken(keys.fxb.secret).token
+      'UserName': keys.fxb.username,
+      'Password': keys.fxb.password
     }
-    privateRequest('Authenticate2FA', params, (res) => {
-      res = JSON.parse(res)
-      console.log(res.SessionToken)
-      SessionToken = res.SessionToken
+
+    privateRequest('WebAuthenticateUser', params, (res) => {
+      console.log(res)
+      let params = {
+        'Code': twoFactor.generateToken(keys.fxb.secret).token
+      }
+      privateRequest('Authenticate2FA', params, (res) => {
+        res = JSON.parse(res)
+        console.log(res.SessionToken)
+        SessionToken = res.SessionToken
+      })
+      console.log(params)
     })
-    console.log(params)
   })
-})
+}
