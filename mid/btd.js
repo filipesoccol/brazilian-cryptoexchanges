@@ -16,6 +16,7 @@ let pairsDict = {
 let token = ''
 
 function BTD (config) {
+  this.name = 'BitcoinTrade'
   this.config = config
   token = config.btd
 }
@@ -91,8 +92,8 @@ BTD.prototype.clearOrders = function (pair) {
 
 BTD.prototype.getOrderbook = function (pair) {
   return new Promise((resolve, reject) => {
-    if (pair === undefined) pair = pairsDict.BTCBRL
-    publicRequest(`/${pair}/orders`, undefined, function (result) {
+    if (pair === undefined) pair = 'BTCBRL'
+    publicRequest(`/${pairsDict[pair]}/orders`, undefined, function (result) {
       try {
         if (!result.data) {
           reject(new Error('ERROR GETTING TRADES BTD' + JSON.stringify(result)))
@@ -151,9 +152,9 @@ BTD.prototype.getOpenOrders = function (pair) {
   // https://api.bitcointrade.com.br/v1/market/user_orders/list?status=executed_completely&start_date=2017-01-01&end_date=2018-01-01&currency=BTC&type=buy&page_size=100&current_page=1
 
   return new Promise((resolve, reject) => {
-    if (pair === undefined) pair = pairsDict.BTCBRL
+    if (pair === undefined) pair = 'BTCBRL'
     var params = {
-      pair: pair,
+      pair: pairsDict[pair],
       start_date: moment().subtract(1, 'days').format('YYYY-MM-DD')
       // type: 'buy',
       // status: 'executed_completely'
@@ -168,7 +169,7 @@ BTD.prototype.getOpenOrders = function (pair) {
         var orderStruct = {
           id: order.id,
           side: order.type,
-          pair: pair,
+          pair: pairsDict[pair],
           price: order.unit_price,
           amount: order.remaining_amount,
           timestamp: moment(order.create_date),
@@ -194,9 +195,9 @@ BTD.prototype.getTrades = function (pair, since) {
   // --data ""
 
   return new Promise((resolve, reject) => {
-    if (pair === undefined) pair = pairsDict.BTCBRL
+    if (pair === undefined) pair = 'BTCBRL'
     var params = {
-      pair: pair,
+      pair: pairsDict[pair],
       page_size: 300,
       start_date: moment().subtract(12, 'hours').format('YYYY-MM-DD')
       // end_date: moment().format('YYYY-MM-DD'),
@@ -216,7 +217,7 @@ BTD.prototype.getTrades = function (pair, since) {
         var orderStruct = {
           // id: order.id,
           side: order.type,
-          pair: pair,
+          pair: pairsDict[pair],
           price: order.unit_price,
           fee: order.executed_amount * 0.0035,
           amount: order.executed_amount,
@@ -236,9 +237,9 @@ BTD.prototype.getTrades = function (pair, since) {
 
 BTD.prototype.sendOrder = function (pair, side, price, volume) {
   return new Promise((resolve, reject) => {
-    if (pair === undefined) pair = pairsDict.BTCBRL
+    if (pair === undefined) pair = 'BTCBRL'
     var params = {
-      pair: pair,
+      pair: pairsDict[pair],
       type: side,
       subtype: 'limited',
       unit_price: price.toPrecision(6),
